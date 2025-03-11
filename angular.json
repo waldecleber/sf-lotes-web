@@ -5,6 +5,9 @@
   "projects": {
     "lotes-app": {
       "projectType": "application",
+      "i18n": { 
+      "sourceLocale": "pt-BR"
+    },
       "schematics": {},
       "root": "",
       "sourceRoot": "src",
@@ -25,9 +28,16 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "src/css/sb-admin-2.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/js/sb-admin-2.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -63,7 +73,8 @@
               "browserTarget": "lotes-app:build:production"
             },
             "development": {
-              "browserTarget": "lotes-app:build:development"
+              "browserTarget": "lotes-app:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -94,5 +105,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "fb859fe9-9087-4378-bed9-22e881669bc7"
   }
 }

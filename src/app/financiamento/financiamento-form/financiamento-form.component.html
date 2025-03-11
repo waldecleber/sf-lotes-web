@@ -1,0 +1,87 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Financiamento de Terreno</h1>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form (ngSubmit)="salvarFinanciamento()" #frm="ngForm">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputLoteamento" class="control-label required">Loteamento</label>
+                    <select id="inputLoteamento" name="inputLoteamento" class="form-control" [ngModel]="loteamentoSelecionado"
+                        (ngModelChange)="onChangeLoteamento($event)" required #inputLoteamento="ngModel"
+                        [class.is-invalid]="inputLoteamento.invalid && (inputLoteamento.dirty || inputLoteamento.touched)">
+                        <option *ngFor="let item of loteamentos" [ngValue]="item" >{{item.nome}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="loteNumero" class="control-label required">Lote</label>
+                    <input type="text" [(ngModel)]="lote.numero" name="loteNumero" class="form-control"
+                        id="loteNumero" #loteNumero="ngModel" placeholder="Número do Lote"
+                        required
+                        [class.is-invalid]="loteNumero.invalid && (loteNumero.dirty || loteNumero.touched)">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="dataCompra" class="control-label required">Data da compra</label>
+                    <div class="input-group">
+                        <input
+                        required
+                            class="form-control"
+                            placeholder="dd/mm/yyyy"
+                            name="dataCompra"
+                            id="dataCompra"
+                            [(ngModel)]="dataCompra"
+                            (dateSelect)="onDateSelect($event)"
+                            ngbDatepicker
+                            #d="ngbDatepicker"
+                        />
+                        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"><i class="fa-solid fa-calendar-days"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="vlTerreno" class="control-label required">Valor do Terreno</label>
+                    <input type="number" [(ngModel)]="financiamento.valorTotal" name="vlTerreno" class="form-control"
+                        [class.is-invalid]="vlTerreno.invalid && (vlTerreno.dirty || vlTerreno.touched)"
+                        required
+                        #vlTerreno="ngModel"
+                        id="vlTerreno" >
+                </div>
+
+
+                <div class="form-group col-md-2">
+                    <label for="qtdeParcelas" class="control-label required">Qtde de Parcelas</label>
+                    <input type="number" [(ngModel)]="financiamento.qtdeParcelas" name="qtdeParcelas" class="form-control"
+                    [class.is-invalid]="qtdeParcelas.invalid && (qtdeParcelas.dirty || qtdeParcelas.touched)"
+                    required
+                    #qtdeParcelas="ngModel"
+                        id="qtdeParcelas" >
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="valorParcela" class="control-label required">Valor da Parcela</label>
+                    <input type="number" [(ngModel)]="financiamento.valorParcela" name="valorParcela" class="form-control"
+                    [class.is-invalid]="valorParcela.invalid && (valorParcela.dirty || valorParcela.touched)"
+                    required
+                    #valorParcela="ngModel"
+                        id="valorParcela" >
+                </div>
+
+                
+            </div>
+
+            <div>
+                <button type="submit" id="btnSearch" class="btn btn-primary btn-md center-block" Style="width: 100px;" [disabled]="frm.invalid">Salvar</button>
+                <button type="button" class="btn btn-danger" [routerLink]="['/cliente-lotes', cpf]">Cancelar
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+
+</div>

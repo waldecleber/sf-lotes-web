@@ -1,1 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+#btnSearch,
+#btnClear{
+    display: inline-block;
+    vertical-align: top;
+}
+
+clickable {
+    cursor: pointer;
+  }
+
+  .row-link:hover {
+    background-color: rgba(0, 0, 0, .05);
+    cursor: pointer;
+  }
+
+  .control-label.required:after { 
+    color: #d00;
+    content: "*";
+    position: relative;
+    margin-left: 5px;
+    top:1px;
+  }
+
+  .error-msg {
+    color: #a94442;
+  }
+  .fix-error-icon {
+    top: 27px;
+  }

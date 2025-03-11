@@ -1,0 +1,72 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Listagem de Clientes</h1>
+    <a href="cliente-form" class="d-none d-sm-inline-block btn btn-primary btn-lg"><i
+            class="fa-solid fa-user-plus"></i> Novo Cliente</a>
+</div>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div >
+
+
+
+            <form>
+                <div class="mb-3 row">
+                    <label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Buscar por Nome:</label>
+                    <div class="col-xs-3 col-sm-auto">
+                        <input id="table-filtering-search" class="form-control" type="text" [formControl]="filter" />
+                    </div>
+                </div>
+            </form>
+
+
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nome do Cliente</th>
+                        <th scope="col">CPF</th>
+                        <th scope="col">Celular</th>
+                        <th scope="col"> Ação </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr class="row-hover" *ngFor="let cliente of clientes$ | async; index as i" >
+                        <th scope="row">{{ i + 1 }}</th>
+                        <td >
+                            <ngb-highlight [result]="cliente.nome" [term]="filter.value" />
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="cliente.cpf" [term]="filter.value" />
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="cliente.celular" [term]="filter.value" />
+                        </td>
+
+                        <td><div class="btn-group" role="group">
+                            <button type="button" class="btn btn-primary"> <i class="fa-solid fa-pen"></i>  Editar</button>
+                        </div>
+                        <div class="btn-group" role="group" 
+                            aria-label="Basic outlined example">
+                           <button type="button" class="btn btn-info" [routerLink]="['/cliente-lotes', cliente.cpf]">
+                               <i class="fa fa-mountain-sun"></i> Lotes
+                           </button>
+                       </div>
+                       
+                            <button type="button" class="btn btn-danger"> <i class="fa-solid fa-trash"></i>  Remover</button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="list.length == 0">
+                        <td colspan="4" style="text-align: center">Nenhum cliente encontrado</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

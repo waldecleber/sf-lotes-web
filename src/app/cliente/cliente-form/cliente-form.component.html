@@ -1,0 +1,89 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Cadastro de Clientes</h1>
+</div>
+
+
+<div class="card shadow mb-4">
+<div class="card-body">
+<form (ngSubmit)="salvarCliente()" #frm="ngForm">
+    <div class="form-row">
+        <div class="form-group col-md-10" [ngClass]="displayFieldCss('name')">
+            <label for="name" class="control-label required">Nome</label>
+            <input type="text" id="name" name="name" #name="ngModel" required class="form-control" [(ngModel)]="cliente.nome"
+              [class.is-invalid]="name.invalid && (name.dirty || name.touched)">
+            
+
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="inputCPF" class="control-label required">CPF</label>
+          <input type="text" inputmode="numeric" [(ngModel)]="cliente.cpf"  [ngClass]="displayFieldCss('inputCPF')"
+          mask="000.000.000-00"  [dropSpecialCharacters]="false" class="form-control" id="inputCPF" name="inputCPF" #inputCPF="ngModel" placeholder="CPF" required
+          [class.is-invalid]="inputCPF.invalid && (inputCPF.dirty || inputCPF.touched)">
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="inputCelular">Telefone</label>
+          <input type="tel" inputmode="numeric" [(ngModel)]="cliente.celular" 
+          mask="(00) 0 0000-0000" [dropSpecialCharacters]="false" class="form-control" id="inputCelular" name="inputCelular" placeholder="Telefone">
+        </div>
+      
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-10" [ngClass]="displayFieldCss('inputAddress')">
+        <label for="inputAddress" class="control-label required">Endereço</label>
+        <input type="text" [(ngModel)]="endereco.logradouro" name="inputAddress" #inputAddress="ngModel" class="form-control" id="inputAddress" placeholder="Rua dos Bobos, nº 0">
+      </div>
+
+      
+
+     
+    </div>
+    <div class="form-row">
+      
+      <div class="form-group col-md-2">
+        <label for="inputEstado">Estado</label>
+        <select id="inputEstado" name="inputEstado" class="form-control" [(ngModel)]="estadoSelecionado"
+            (ngModelChange)="onChangeEstado($event)" >
+            <option [value]="undefined" selected>No Default Layout</option>
+            <option *ngFor="let uf of estados" [value]="uf.sigla" >{{uf.sigla}}</option>
+        </select>
+    </div>
+
+    <div class="form-group col-md-6">
+      <label for="inputCity">Cidade</label>
+      <select id="inputCity" name="inputCity" class="form-control" [(ngModel)]="endereco.cidade"
+          (ngModelChange)="onChangeCidade($event)">
+          <option [selected]>Escolher...</option>
+          <option *ngFor="let city of cidades" [ngValue]="city.nome">{{city.nome}}</option>
+      </select>
+  </div>
+
+      <div class="form-group col-md-2">
+        <label for="inputCEP">CEP</label>
+        <input type="text" class="form-control" id="inputCEP" name="inputCEP" [(ngModel)]="endereco.cep" mask="00000-000" [dropSpecialCharacters]="false">
+      </div>
+    </div>
+
+     
+
+     <div>
+      <button type="submit" id="btnSearch" class="btn btn-primary btn-md center-block" Style="width: 100px;" [disabled]="frm.invalid">Salvar</button>
+      <a href="clientes" class="d-none d-sm-inline-block btn btn-danger btn-md">Cancelar</a>
+    </div>
+
+
+        
+
+  </form>
+
+
+
+
+
+</div>
+
+
+</div>
+

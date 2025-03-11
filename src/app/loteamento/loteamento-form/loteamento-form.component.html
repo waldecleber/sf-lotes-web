@@ -1,0 +1,60 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Cadastro de Loteamento</h1>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form (ngSubmit)="salvarLoteamento()" #frm="ngForm">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="name" class="control-label required">Nome do Loteamento</label>
+                    <input type="text" id="name" name="name" class="form-control" [(ngModel)]="loteamento.nome">
+                    <!-- <app-field-error-display [displayError]="isFieldValid('name')" errorMsg="Campo não pode ficar em branco">
+            </app-field-error-display> -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddress">Endereço</label>
+                <input type="text" [(ngModel)]="endereco.logradouro" name="inputAddress" class="form-control"
+                    id="inputAddress" placeholder="Rua dos Bobos, nº 0">
+            </div>
+            <div class="form-row">
+
+                <div class="form-group col-md-4">
+                    <label for="inputEstado">Estado</label>
+                    <select id="inputEstado" name="inputEstado" class="form-control" [(ngModel)]="estadoSelecionado"
+                        (ngModelChange)="onChangeEstado($event)" >
+                        <option [value]="undefined" selected>No Default Layout</option>
+                        <option *ngFor="let uf of estados" [value]="uf.sigla" >{{uf.sigla}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="inputCity">Cidade</label>
+                    <select id="inputCity" name="inputCity" class="form-control" [(ngModel)]="endereco.cidade"
+                        (ngModelChange)="onChangeCidade($event)">
+                        <option [selected]>Escolher...</option>
+                        <option *ngFor="let city of cidades" [ngValue]="city.nome">{{city.nome}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label for="inputCEP">CEP</label>
+                    <input type="text" class="form-control" id="inputCEP" name="inputCEP" [(ngModel)]="endereco.cep"
+                        mask="00000-000">
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" id="btnSearch" class="btn btn-primary btn-md center-block" Style="width: 100px;"
+                    OnClick="btnSearch_Click">Salvar</button>
+                <button id="btnClear" class="btn btn-danger btn-md center-block" Style="width: 100px;"
+                    OnClick="btnClear_Click">Cancelar</button>
+            </div>
+
+        </form>
+    </div>
+
+
+</div>

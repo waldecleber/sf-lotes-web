@@ -1,0 +1,108 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Lotes do Cliente</h1>
+    <a [routerLink]="['/financiamento-form', cliente.cpf]" class="d-none d-sm-inline-block btn btn-primary btn-lg"><i
+            class="fa-solid fa-user-plus"></i> Novo Financiamento</a>
+
+
+            
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="mb-3 row">
+            <label for="staticEmail" class="fw-bold col-sm-2 col-form-label">Nome:</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="staticEmail" [value]="cliente.nome">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="inputCpf" class="fw-bold col-sm-2 col-form-label">CPF:</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="inputCpf" name="inputCpf" [value]="cliente.cpf"  mask="000.000.000-00" inputmode="numeric" >
+            </div>
+          </div>
+    </div>
+</div>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div>           
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        
+                        <th scope="col">Loteamento</th>
+                        <th scope="col">Número do Lote</th>
+                        <th scope="col">Total de Parcelas</th>
+                        <th scope="col">Parcelas Pagas</th>
+                        <th scope="col">Parcelas Restantes</th>
+                        <th scope="col">Valor Total</th>
+                        <th scope="col">Valor da Parcela</th>
+                        <th scope="col">Total Pago</th>
+                        <th scope="col">Quanto Falta</th>
+
+                        <th scope="col"> Detalhes </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr *ngFor="let fin of financiamentos$ | async; index as i">
+                        <td>
+                            <ngb-highlight [result]="fin.lote.loteamento.nome" [term]="filter.value" />
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="fin.lote.numero | number" [term]="filter.value" />
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="fin.qtdeParcelas | number" [term]="filter.value" />
+                        </td>
+
+                        <td>
+                            <ngb-highlight [result]="fin.parcelasPagas | number" [term]="filter.value" />
+                        </td>
+                         <td>
+                            <ngb-highlight [result]="fin.parcelasRestantes | number" [term]="filter.value" />
+                        </td>
+                         <td>
+                            <ngb-highlight [result]="fin.valorTotal | currency" [term]="filter.value" />
+                        </td>
+                         <td>
+                            <ngb-highlight [result]="fin.valorParcela | currency" [term]="filter.value" />
+                        </td>
+                         <td>
+                            <ngb-highlight [result]="fin.totalPago | currency" [term]="filter.value" />
+                        </td>
+                        <td>
+                            <ngb-highlight [result]="fin.faltaPagar | currency" [term]="filter.value" />
+                        </td>
+                        <td><button type="button" class="btn btn-primary" [routerLink]="['/cliente-parcelas']"> <i class="fa-solid fa-magnifying-glass"></i>  Detalhes</button>       </td>
+                    </tr>
+                    
+                    <tr *ngIf="list.length == 0">
+                        <td colspan="4" style="text-align: center">Nenhum cliente encontrado</td>
+                    </tr> 
+                    
+                </tbody>
+            </table>
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+        </div>
+    </div>
+</div>
