@@ -1,8 +1,8 @@
-import { DecimalPipe, AsyncPipe, CommonModule, NgFor } from '@angular/common';
+import { DecimalPipe, AsyncPipe, CommonModule, NgFor, formatDate } from '@angular/common';
 import { Component, OnInit, PipeTransform } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NgbTypeaheadModule, NgbHighlight } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTypeaheadModule, NgbHighlight, NgbDatepickerModule, NgbDateStruct, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaskDirective } from 'ngx-mask';
 import { map, Observable, startWith } from 'rxjs';
 import { Cliente } from 'src/app/model/cliente-model';
@@ -11,140 +11,142 @@ import { Lote } from 'src/app/model/lote-model';
 import { Loteamento } from 'src/app/model/loteamento-model';
 import { Parcela } from 'src/app/model/parcela-model';
 import { ClienteService } from 'src/app/services/cliente.service';
+import { FinanciamentoService } from 'src/app/services/financiamento.service';
+import { ModalService } from 'src/app/services/modal.service';
+import { ModalComponent } from '../modal/modal.component';
+import { ParcelaService } from 'src/app/services/parcela.service';
 
-
-
-
-
-const CLIENTE: Cliente =
-{
-  nome: 'Joao',
-  cpf: '123123',
-  endereco: {
-    logradouro: '',
-    cep: '',
-    cidade: '',
-    estado: {
-      sigla: ''
-    }
-  },
-  cep: '',
-  celular: ''
-}
-
-
-const LOTEAMENTO: Loteamento =
-{
-  nome: 'Vila Jardim',
-  endereco: {
-    logradouro: '',
-    cep: '',
-    cidade: '',
-    estado: {
-      sigla: ''
-    }
-  },
-  id: 0,
-  lotes: [{
-    valor: 20000,
-    financiamento: new Financiamento,
-    numero: 10,
-    loteamento: new Loteamento,
-    cliente: CLIENTE,
-    id: 0
-  }]
-};
-
-const FINANCIAMENTO: Financiamento =
-{
-  valorTotal: 23,
-  lote: {
-    valor: 20000,
-
-    numero: 10,
-    loteamento: LOTEAMENTO,
-    cliente: CLIENTE,
-    id: 0,
-    financiamento: new Financiamento
-  },
-  cliente: CLIENTE,
-  dataCompra: '12/11/2024',
-  qtdeParcelas: 200,
-  parcelasPagas: 200,
-  parcelasRestantes: 180,
-  totalPago: 9520,
-  faltaPagar: 12050,
-  valorParcela: 500,
-  id: 0
-};
-
-const LOTE: Lote =
-{
-  valor: 20000,
-  financiamento: FINANCIAMENTO,
-  numero: 10,
-  loteamento: LOTEAMENTO,
-  cliente: CLIENTE,
-  id: 0
-};
-
-const PARCELAS: Parcela[] = [{
-  numeroParcela: 1,
-  id: 1,
-  lote: LOTE,
-  cliente: CLIENTE,
-  financiamento: FINANCIAMENTO,
-  dataPagamento: new Date('12/11/2024'),
-  valor: 500,
-  status: 'PAGO'
-},
-{
-  numeroParcela: 2,
-  id: 2,
-  lote: LOTE,
-  cliente: CLIENTE,
-  financiamento: FINANCIAMENTO,
-  dataPagamento: new Date('12/12/2024'),
-  valor: 500,
-  status: 'PAGO'
-}];
 
 @Component({
   selector: 'app-cliente-parcelas',
   templateUrl: './cliente-parcelas.component.html',
   styleUrls: ['./cliente-parcelas.component.css'],
-  imports: [DecimalPipe, AsyncPipe, ReactiveFormsModule, NgbTypeaheadModule, NgbHighlight, CommonModule, NgFor, NgxMaskDirective, RouterLink],
+  imports: [DecimalPipe, AsyncPipe, ReactiveFormsModule, NgbHighlight, CommonModule, NgFor,
+    NgxMaskDirective, RouterLink, FormsModule, ModalComponent, NgbDatepickerModule,
+    NgbPaginationModule
+  ],
   standalone: true,
   providers: [DecimalPipe],
 })
 export class ClienteParcelasComponent implements OnInit {
 
-  parcelas$!: Observable<Parcela[]>;
+  // parcelas$!: Observable<Parcela[]>;
   filter = new FormControl('', { nonNullable: true });
-  financiamento = new Financiamento();
-  list: Parcela[] = PARCELAS;
+  parcelas: Parcela[] = [];
+  financiamento: Financiamento = new Financiamento;
   cliente: Cliente = new Cliente;
 
-  constructor(pipe: DecimalPipe, private clienteService: ClienteService, formBuilder: FormBuilder, private _route: ActivatedRoute) {
-    this.parcelas$ = this.filter.valueChanges.pipe(
-      startWith(''),
-      map((text) => this.search(text, pipe)),
-    );
+  parcelaSelecionada: Parcela = new Parcela;
+  dataCompra!: NgbDateStruct;
+  valorPago!: number;
+  cpf!: any;
+  id!: any;
+  msgError!: string;
+  showError = false;
 
-    this.financiamento = FINANCIAMENTO;
-    
+  page = 1;
+  pageSize = 10;
+  collectionSize = this.parcelas.length;
+
+  constructor(pipe: DecimalPipe,
+    private clienteService: ClienteService,
+    private financiamentoService: FinanciamentoService,
+    private parcelaService: ParcelaService,
+    protected modalService: ModalService,
+    private _route: ActivatedRoute) {
+
+    this.financiamento.cliente = new Cliente;
+    this.cpf = this._route.snapshot.paramMap.get('cpf');
+    if(this.cpf != null) {
+      this.clienteService.buscarClientePorCpf(this.cpf)
+        .subscribe(data => { 
+          this.cliente = data;
+      },
+      error => {
+         console.log(error);
+      });
+    } 
+
+    this.id = this._route.snapshot.paramMap.get('id');
+
+    this.financiamentoService.listarFinanciamentosPorId(this.id)
+      .subscribe((res: any) => {
+        this.financiamento = res;
+      });
+    this.refreshParcelas();
+
   }
   ngOnInit(): void {
 
   }
 
-  search(text: string, pipe: PipeTransform): Parcela[] {
-    return PARCELAS.filter((resp: any) => {
-      const term = text.toLowerCase();
-      return (
-        pipe.transform(resp.numeroParcela).includes(term)
-      );
-    });
+
+  onSelectParcela(parcela: Parcela) {
+    this.parcelaSelecionada = parcela;
+    this.valorPago = parcela.valor;
+    this.modalService.open('modal-1', parcela);
+  }
+
+  onDateSelect(event: any) {
+    let year = event.year;
+    let month = event.month <= 9 ? '0' + event.month : event.month;;
+    let day = event.day <= 9 ? '0' + event.day : event.day;;
+    let finalDate = year + "-" + month + "-" + day;
+    this.parcelaSelecionada.dataPagamento = finalDate;
+
+    this.validaDatas();
+  }
+  
+  private validaDatas() {
+    let date1 = formatDate(this.parcelaSelecionada.dataVencimento, 'yyyy-MM-dd', 'pt_BR');
+    let date2 = formatDate(this.parcelaSelecionada.dataPagamento, 'yyyy-MM-dd', 'pt_BR');
+    if (date2 < date1) {
+      this.showError = true;
+      this.msgError = `Data de Pagamento ${formatDate(date2, 'dd-MM-yyyy', 'pt_BR')} não pode ser anterior a Data de Vencimento! ${formatDate(date1, 'dd-MM-yyyy', 'pt_BR')} `;
+      console.log("parcelaSelecionada", this.parcelaSelecionada);
+    } else {
+      this.showError = false;
+      this.msgError = "";
+    }
+  }
+
+  atualizarParcela(event: any) {
+    if (this.valorPago < this.parcelaSelecionada.valor) {
+      this.showError = true
+      this.msgError = `Valor pago não pode ser menor que o valor da Parcela ${this.parcelaSelecionada.valor}`;
+    } else {
+      this.parcelaSelecionada.status = "PAGO";
+      this.parcelaSelecionada.cliente = this.cliente;
+      this.parcelaSelecionada.financiamento = this.financiamento;
+      this.parcelaSelecionada.lote = this.financiamento.lote;
+      this.parcelaSelecionada.valor = this.valorPago;
+      
+     // this.parcelaService.salvarParcela(this.parcelaSelecionada).subscribe(resp => {
+     //   console.log("parcela paga", this.parcelaSelecionada);
+     // });
+      this.parcelaSelecionada = new Parcela;
+      this.modalService.close();    
+      
+
+      this.financiamento.faltaPagar = this.financiamento.faltaPagar - this.valorPago;
+      this.financiamento.parcelasPagas = this.financiamento.parcelasPagas + 1;
+      this.financiamento.parcelasRestantes = this.financiamento.parcelasRestantes -1;
+      this.financiamento.totalPago = this.financiamento.totalPago + this.valorPago;
+    }
+
+  }
+
+  refreshParcelas() {
+    this.parcelaService.listarParcelasPorCpfAndIdFinanciamento(this.cpf, this.id)
+      .subscribe((res: any) => {
+        this.parcelas = res;
+        this.collectionSize = this.parcelas.length;
+        this.parcelas = this.parcelas.slice(
+          (this.page - 1) * this.pageSize,
+          (this.page - 1) * this.pageSize + this.pageSize,
+        );
+      });
+
   }
 
 }

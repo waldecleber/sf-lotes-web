@@ -1,4 +1,4 @@
-import { JsonPipe, NgFor } from '@angular/common';
+import { JsonPipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Endereco } from 'src/app/model/endereco-model';
@@ -20,109 +20,118 @@ import { ConditionalExpr } from '@angular/compiler';
   selector: 'app-financiamento-form',
   templateUrl: './financiamento-form.component.html',
   styleUrls: ['./financiamento-form.component.css'],
-  imports: [NgbDatepickerModule, FormsModule, JsonPipe, NgFor, RouterLink],
+  imports: [NgbDatepickerModule, FormsModule, JsonPipe, NgFor, NgIf, RouterLink],
   standalone: true
 })
 export class FinanciamentoFormComponent implements OnInit {
 
-    financiamento = new Financiamento;
+  financiamento = new Financiamento;
 
-    loteamentoSelecionado = new Loteamento;
-    loteamentos: Loteamento[] = [];
-    lote = new Lote;
-    endereco = new Endereco;
-    estados: Estado[] = [];
-    cidades: any[] = [];
-    estadoSelecionado!: string;
-    cidadeSelecionada!: string;
-    cliente = new Cliente;
-    finalDate!: string;
-    cpf!: any;
-    dataCompra!: NgbDateStruct;
-    
-  
-    constructor(
-      private localidadeService: LocalidadeService, 
-      private loteamentoService: LoteamentoService, 
-      private clienteService: ClienteService,
-      private financiamentoService: FinanciamentoService,
-      private router: Router, private _route: ActivatedRoute) {
-      this.estadoSelecionado = 'AM';
-    }
-    ngOnInit(): void {
-      this.buscarCliente();
-      this.listarLoteamentos();
-      this.listarEstados();
-      this.estadoSelecionado = 'AM';
-      this.listarCidades(this.estadoSelecionado);
-    }
+  loteamentoSelecionado = new Loteamento;
+  loteamentos: Loteamento[] = [];
+  lote = new Lote;
+  endereco = new Endereco;
+  estados: Estado[] = [];
+  cidades: any[] = [];
+  estadoSelecionado!: string;
+  cidadeSelecionada!: string;
+  cliente = new Cliente;
+  finalDate!: string;
+  cpf!: any;
+  dataCompra!: NgbDateStruct;
+  msgError!: string;
+  showError = false;
 
-    buscarCliente() {
-      this.cpf = this._route.snapshot.paramMap.get('cpf');
-      console.log("cpf", this.cpf);
-    if(this.cpf != null) {
+
+  constructor(
+    private localidadeService: LocalidadeService,
+    private loteamentoService: LoteamentoService,
+    private clienteService: ClienteService,
+    private financiamentoService: FinanciamentoService,
+    private router: Router, private _route: ActivatedRoute) {
+    this.estadoSelecionado = 'AM';
+  }
+  ngOnInit(): void {
+    this.buscarCliente();
+    this.listarLoteamentos();
+    this.listarEstados();
+    this.estadoSelecionado = 'AM';
+    this.listarCidades(this.estadoSelecionado);
+  }
+
+  buscarCliente() {
+    this.cpf = this._route.snapshot.paramMap.get('cpf');
+    console.log("cpf", this.cpf);
+    if (this.cpf != null) {
       this.clienteService.buscarClientePorCpf(this.cpf)
-        .subscribe(data => { 
+        .subscribe(data => {
           this.cliente = data;
-      },
-      error => {
-         console.log(error);
-      });
-    } 
+        },
+          error => {
+            console.log(error);
+          });
     }
+  }
 
-    listarLoteamentos() {
-      this.loteamentoService.listarLoteamentos().subscribe(
+  listarLoteamentos() {
+    this.loteamentoService.listarLoteamentos().subscribe(
+      resp => {
+        this.loteamentos = resp;
+
+      }
+    )
+  }
+
+  listarEstados() {
+    this.localidadeService.listarEstados().subscribe(resp => {
+      this.estados = resp;
+    })
+  }
+
+  listarCidades(uf: string) {
+    this.localidadeService.listarCidades(uf).subscribe(resp => {
+      this.cidades = resp;
+    })
+  }
+
+  onChangeLoteamento(item: Loteamento) {
+    this.lote.cliente = this.cliente;
+    this.lote.loteamento = item;
+    this.financiamento.lote = this.lote;
+
+  }
+
+  onChangeCidade(cidade: string) {
+    this.cidadeSelecionada = cidade;
+    this.endereco.cidade = this.cidadeSelecionada;
+  }
+
+  onDateSelect(event: any) {
+    let year = event.year;
+    let month = event.month <= 9 ? '0' + event.month : event.month;;
+    let day = event.day <= 9 ? '0' + event.day : event.day;;
+    this.finalDate = year + "-" + month + "-" + day;
+    this.financiamento.dataCompra = this.finalDate;
+  }
+
+  salvarFinanciamento() {
+    this.financiamento.cliente = this.cliente;
+    this.financiamento.parcelasPagas = 0;
+    this.financiamento.parcelasRestantes = this.financiamento.qtdeParcelas;
+    this.financiamento.totalPago = 0;
+    this.financiamento.faltaPagar = this.financiamento.valorTotal;
+    this.financiamentoService.salvarCliente(this.financiamento)
+      .subscribe(
         resp => {
-          this.loteamentos = resp;
-          
+          this.router.navigate(['/clientes']);
+        },
+        error => { 
+          this.showError = true;
+          this.msgError = error.error.message;
+          console.log('oops', error)
         }
-      )
-    }
-    
-    listarEstados() {
-      this.localidadeService.listarEstados().subscribe(resp => {
-        this.estados = resp;
-      })
-    }
-  
-    listarCidades(uf: string) {
-      this.localidadeService.listarCidades(uf).subscribe(resp => {
-        this.cidades = resp;
-      })
-    }
-  
-    onChangeLoteamento(item: Loteamento) {
-      this.lote.cliente = this.cliente;
-      this.lote.loteamento = item;
-      this.financiamento.lote = this.lote;
-      
-    }
-  
-    onChangeCidade(cidade: string) {
-      this.cidadeSelecionada = cidade;
-      this.endereco.cidade = this.cidadeSelecionada;
-    }
+      );
 
-    onDateSelect(event: any) {      
-      let year = event.year;
-      let month = event.month <= 9 ? '0' + event.month : event.month;;
-      let day = event.day <= 9 ? '0' + event.day : event.day;;
-      this.finalDate = year + "-" + month + "-" + day;
-      this.financiamento.dataCompra = this.finalDate;
-     }
+  }
 
-    salvarFinanciamento() {
-      this.financiamento.cliente = this.cliente;
-      this.financiamento.parcelasPagas = 0;
-      this.financiamento.parcelasRestantes = this.financiamento.qtdeParcelas;
-      this.financiamento.totalPago = 0;
-      this.financiamento.faltaPagar = this.financiamento.valorTotal;
-      console.log("financiamento", this.financiamento);
-      this.financiamentoService.salvarCliente(this.financiamento).subscribe(resp => {
-        this.router.navigate(['/clientes']);
-      });
-
-    }
-    
 }

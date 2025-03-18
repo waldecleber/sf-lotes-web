@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClienteService } from './services/cliente.service';
-import { NgbDatepickerModule, NgbModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbModule, NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { CommonModule } from '@angular/common';
@@ -20,6 +20,9 @@ import { ClienteParcelasComponent } from './cliente/cliente-parcelas/cliente-par
 import { FinanciamentoFormComponent } from './financiamento/financiamento-form/financiamento-form.component';
 import { FinanciamentoService } from './services/financiamento.service';
 import { FieldErrorDisplayComponent } from './field-error-display/field-error-display.component';
+import { ParcelaFormComponent } from './parcela/parcela-form/parcela-form.component';
+import { ModalComponent } from './cliente/modal/modal.component';
+import { ModalService } from './services/modal.service';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,8 @@ import { FieldErrorDisplayComponent } from './field-error-display/field-error-di
     LoteamentoFormComponent,
     LoteFormComponent,
     LoteListComponent,
+    ParcelaFormComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -35,9 +40,10 @@ import { FieldErrorDisplayComponent } from './field-error-display/field-error-di
     NgbModule, NgxMaskDirective,
     NgbTypeaheadModule, CommonModule,
     FormsModule,
-    NgbDatepickerModule
+    NgbDatepickerModule,
+    NgbPaginationModule
   ],
-  providers: [ClienteService, LocalidadeService, LoteamentoService, FinanciamentoService, provideNgxMask(),
+  providers: [ClienteService, LocalidadeService, LoteamentoService, FinanciamentoService, ModalService, provideNgxMask(),
     { provide: LOCALE_ID, useValue: 'pt' }, 
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL'},
   ],

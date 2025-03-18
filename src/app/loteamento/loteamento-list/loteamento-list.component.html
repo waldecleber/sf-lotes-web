@@ -27,8 +27,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nome do Cliente</th>
-                        <th scope="col"> Editar </th>
-                        <th scope="col"> Excluir </th>
+                        <th scope="col"> Ações </th>
                         
                     </tr>
                 </thead>
@@ -40,8 +39,15 @@
                             <ngb-highlight [result]="cliente.nome" [term]="filter.value" />
                         </td>
 
-                        <td><a href="#" title="editar"> <i class="fa-solid fa-pen"></i></a></td>
-                        <td> <a href="#" title="excluir"> <i class="fa-solid fa-trash"></i></a></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-primary"> <i class="fa-solid fa-pen"></i>
+                                    Editar</button>
+                            </div>
+
+                            <button type="button" class="btn btn-danger"> <i class="fa-solid fa-trash"></i>
+                                Remover</button>
+                        </td>
                     </tr>
                     
                     <tr *ngIf="list.length == 0">

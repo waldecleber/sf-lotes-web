@@ -23,7 +23,7 @@ const routes: Routes = [
 
   { path: 'cliente-lotes/:cpf', component: ClienteLotesComponent },
 
-  { path: 'cliente-parcelas', component: ClienteParcelasComponent },
+  { path: 'cliente-parcelas/:cpf/:id', component: ClienteParcelasComponent },
 
   { path: 'lotes', component: LoteListComponent },
 

@@ -24,6 +24,10 @@
     </div>
 </div>
 
+<hr />
+<a href="clientes" class="d-none d-sm-inline-block btn btn-success btn-md"><i class="fa-solid fa-arrow-left"></i>  Voltar</a>      
+<hr />
+
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-body">
@@ -78,7 +82,7 @@
                         <td>
                             <ngb-highlight [result]="fin.faltaPagar | currency" [term]="filter.value" />
                         </td>
-                        <td><button type="button" class="btn btn-primary" [routerLink]="['/cliente-parcelas']"> <i class="fa-solid fa-magnifying-glass"></i>  Detalhes</button>       </td>
+                        <td><button type="button" class="btn btn-primary" [routerLink]="['/cliente-parcelas', fin.cliente.cpf, fin.id]"> <i class="fa-solid fa-magnifying-glass"></i>  Detalhes</button>       </td>
                     </tr>
                     
                     <tr *ngIf="list.length == 0">
@@ -88,20 +92,7 @@
                 </tbody>
             </table>
 
-
-        
-
-
-
-
-
-
-
-
-
-
-
-        
+            
             
         </div>
     </div>

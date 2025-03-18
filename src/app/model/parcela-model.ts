@@ -8,7 +8,8 @@ export class Parcela {
     lote!: Lote;
     cliente!: Cliente;
     financiamento!: Financiamento;
-    dataPagamento!: Date;
+    dataPagamento!: string;
+    dataVencimento!: string;
     valor!: number;
     status!: string;
 }

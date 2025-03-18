@@ -17,9 +17,9 @@
                 </div>
                 <div class="form-group">
                     <label for="loteNumero" class="control-label required">Lote</label>
-                    <input type="text" [(ngModel)]="lote.numero" name="loteNumero" class="form-control"
+                    <input type="number" [(ngModel)]="lote.numero" name="loteNumero" class="form-control"
                         id="loteNumero" #loteNumero="ngModel" placeholder="Número do Lote"
-                        required
+                        required min="0"
                         [class.is-invalid]="loteNumero.invalid && (loteNumero.dirty || loteNumero.touched)">
                 </div>
 
@@ -27,7 +27,7 @@
                     <label for="dataCompra" class="control-label required">Data da compra</label>
                     <div class="input-group">
                         <input
-                        required
+                            required
                             class="form-control"
                             placeholder="dd/mm/yyyy"
                             name="dataCompra"
@@ -47,7 +47,7 @@
                     <label for="vlTerreno" class="control-label required">Valor do Terreno</label>
                     <input type="number" [(ngModel)]="financiamento.valorTotal" name="vlTerreno" class="form-control"
                         [class.is-invalid]="vlTerreno.invalid && (vlTerreno.dirty || vlTerreno.touched)"
-                        required
+                        required min="0"
                         #vlTerreno="ngModel"
                         id="vlTerreno" >
                 </div>
@@ -57,7 +57,7 @@
                     <label for="qtdeParcelas" class="control-label required">Qtde de Parcelas</label>
                     <input type="number" [(ngModel)]="financiamento.qtdeParcelas" name="qtdeParcelas" class="form-control"
                     [class.is-invalid]="qtdeParcelas.invalid && (qtdeParcelas.dirty || qtdeParcelas.touched)"
-                    required
+                    required min="0"
                     #qtdeParcelas="ngModel"
                         id="qtdeParcelas" >
                 </div>
@@ -66,9 +66,9 @@
                     <label for="valorParcela" class="control-label required">Valor da Parcela</label>
                     <input type="number" [(ngModel)]="financiamento.valorParcela" name="valorParcela" class="form-control"
                     [class.is-invalid]="valorParcela.invalid && (valorParcela.dirty || valorParcela.touched)"
-                    required
+                    required min="0"
                     #valorParcela="ngModel"
-                        id="valorParcela" >
+                    id="valorParcela" >
                 </div>
 
                 
@@ -81,7 +81,18 @@
             </div>
 
         </form>
+
+        <br />
+        <div class="alert alert-danger" role="alert" *ngIf="showError">
+            ERROR: <strong> {{ msgError }} </strong>
+        </div>
+
+          
     </div>
 
+    
 
 </div>
+
+
+

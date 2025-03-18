@@ -8,17 +8,22 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class FinanciamentoService {
-url =  environment.BASE_URL + "api/financiamento";
+  url = environment.BASE_URL + "api/financiamento";
   private financiamentos$!: Observable<Financiamento[]>;
 
   constructor(private http: HttpClient) { }
 
   listarFinanciamentosPorCpf(cpf: string | null) {
-      return this.http.get<Financiamento[]>(`${this.url}/${cpf}`);
-    }
+    return this.http.get<Financiamento[]>(`${this.url}/${cpf}`);
+  }
+
+
+  listarFinanciamentosPorId(id: string | null) {
+    return this.http.get<Financiamento>(`${this.url}/id/${id}`);
+  }
 
   salvarCliente(financiamento: Financiamento) {
-      return this.http.post(this.url, financiamento);
-    }
+    return this.http.post(this.url, financiamento);
+  }
 
 }

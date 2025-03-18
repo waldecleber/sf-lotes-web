@@ -1,110 +1,184 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
   <h1 class="h3 mb-0 text-gray-800">Dados do Financiamento</h1>
-  <a href="cliente-form" class="d-none d-sm-inline-block btn btn-primary btn-lg"><i
-          class="fa-solid fa-user-plus"></i> Nova Parcela</a>
 
 
 
 </div>
 
-<div class="card shadow mb-4">
+
+<div class="card shadow mb-12">
   <div class="card-body">
-      <div class="mb-3 row">
-          <label for="cliente" class="fw-bold col-sm-2 col-form-label">Nome:</label>
-          <div class="col-sm-10">
+      <div class="mb-12 row">
+          <label for="cliente" class="fw-bold col-sm-3 col-form-label">Nome:</label>
+          <div class="col-sm-9">
             <input type="text" readonly class="form-control-plaintext" id="cliente" [value]="financiamento.cliente.nome">
           </div>
         </div>
 
-        <div class="mb-3 row">
-          <label for="loteamento" class="fw-bold col-sm-2 col-form-label">Loteamento:</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="loteamento" [value]="financiamento.lote.loteamento.nome">
+        <div class="mb-12 row">
+          <label for="loteamento" class="fw-bold col-sm-3 col-form-label">Loteamento:</label>
+          <div class="col-sm-9">
+            <input type="text" readonly class="form-control-plaintext" id="loteamento" [value]="financiamento.lote.loteamento?.nome">
           </div>
         </div>
 
-        <div class="mb-3 row">
-          <label for="numLote" class="fw-bold col-sm-2 col-form-label">Lote:</label>
-          <div class="col-sm-10">
+        <div class="mb-12 row">
+          <label for="numLote" class="fw-bold col-sm-3 col-form-label">Lote:</label>
+          <div class="col-sm-9">
             <input type="text" readonly class="form-control-plaintext" id="numLote" [value]="financiamento.lote.numero">
           </div>
         </div>
 
-        <div class="mb-3 row">
-          <label for="totalPago" class="fw-bold col-sm-2 col-form-label">Total Pago:</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="totalPago" [value]="financiamento.totalPago">
+        <div class="mb-12 row">
+          <label for="totalPago" class="fw-bold col-sm-3 col-form-label">Total Pago:</label>
+          <div class="col-sm-9">
+            <input type="text" readonly class="form-control-plaintext" id="totalPago" [value]="financiamento.totalPago | currency">
           </div>
         </div>
 
-        <div class="mb-3 row">
-          <label for="qtdeParcelas" class="fw-bold col-sm-2 col-form-label">Total de Parcelas:</label>
-          <div class="col-sm-10">
+        <div class="mb-12 row">
+          <label for="qtdeParcelas" class="fw-bold col-sm-3 col-form-label">Total de Parcelas:</label>
+          <div class="col-sm-9">
             <input type="text" readonly class="form-control-plaintext" id="qtdeParcelas" [value]="financiamento.qtdeParcelas">
           </div>
         </div>
 
-        <div class="mb-3 row">
-          <label for="parcelasPagas" class="fw-bold col-sm-2 col-form-label">Pacelas Pagas:</label>
-          <div class="col-sm-10">
+        <div class="mb-12 row">
+          <label for="parcelasPagas" class="fw-bold col-sm-3 col-form-label">Pacelas Pagas:</label>
+          <div class="col-sm-9">
             <input type="text" readonly class="form-control-plaintext" id="inputCpf" name="parcelasPagas" [value]="financiamento.parcelasPagas" inputmode="numeric" >
           </div>
         </div>
 
-        <div class="mb-3 row">
-          <label for="parcelasRestantes" class="fw-bold col-sm-2 col-form-label">Parcelas Restantes:</label>
-          <div class="col-sm-10">
+        <div class="mb-12 row">
+          <label for="parcelasRestantes" class="fw-bold col-sm-3 col-form-label">Parcelas Restantes:</label>
+          <div class="col-sm-8">
             <input type="text" readonly class="form-control-plaintext" id="parcelasRestantes" [value]="financiamento.parcelasRestantes">
           </div>
         </div>
   </div>
 </div>
 
+<hr />
+
+<a [routerLink]="['/cliente-lotes', financiamento.cliente.cpf]" class="d-none d-sm-inline-block btn btn-success btn-md"><i class="fa-solid fa-arrow-left"></i>  Voltar</a>    
+
+<hr />
+
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-body">
-      <div>
+    <div>
 
-          <table class="table table-striped">
-              <thead>
-                  <tr>
+      <table class="table table-striped">
+        <thead>
+          <tr>
 
-                      <th scope="col">Data do Pagamento</th>
-                      <th scope="col">Valor Pago</th>
-                      <th scope="col">Situação</th>
-                      <th scope="col"> Ação </th>
+            <th scope="col">#</th>
+            <th scope="col">Data do Vencimento</th>
+            <th scope="col">Data do Pagamento</th>
+            <th scope="col">Valor Pago</th>
+            <th scope="col">Situação</th>
+            <th scope="col"> Ação </th>
 
-                  </tr>
-              </thead>
-              <tbody>
+          </tr>
+        </thead>
+        <tbody>
 
-                  <tr *ngFor="let parcela of parcelas$ | async; index as i">
-                      <td>
-                          <ngb-highlight [result]="parcela.dataPagamento | date:'dd/MM/yyyy'" [term]="filter.value" />
-                      </td>
-                      <td>
-                          <ngb-highlight [result]="parcela.valor | currency" [term]="filter.value" />
-                      </td>
+          <tr *ngFor="let parcela of parcelas">
+            <th scope="row">
+              {{ parcela.numeroParcela }}
+            </th>
+            <td>
+              <ngb-highlight [result]="parcela.dataVencimento | date:'dd/MM/yyyy'" [term]="filter.value" />
+            </td>
+            <td>
+              <ngb-highlight [result]="parcela.dataPagamento | date:'dd/MM/yyyy'" [term]="filter.value" />
+            </td>
+            <td>
+              <ngb-highlight [result]="parcela.valor | currency" [term]="filter.value" />
+            </td>
+            <td>
+              <ngb-highlight [result]="parcela.status" [term]="filter.value" />
+            </td>
+            <td>
+              <button (click)="onSelectParcela(parcela)" class="btn btn-primary"> <i class="fa-solid fa-pen"></i>
+                Pagar</button>
+            </td>
+          </tr>
 
-                      <td>
-                          <ngb-highlight [result]="parcela.status" [term]="filter.value" />
-                      </td>
+          <tr *ngIf="parcelas.length == 0">
+            <td colspan="4" style="text-align: center">Nenhuma parcela encontrada</td>
+          </tr>
 
-                      <td>
-                          <button type="button" class="btn btn-primary" [routerLink]="['/parcela-form']" > <i class="fa-solid fa-pen"></i> Editar</button>
-                          <button type="button" class="btn btn-danger" [routerLink]="['/parcela-form']" > <i class="fa-solid fa-trash"></i> Remover</button>
-                      </td>
-                  </tr>
+        </tbody>
+      </table>
+      
 
-                  <tr *ngIf="list.length == 0">
-                      <td colspan="4" style="text-align: center">Nenhum financiamento encontrado</td>
-                  </tr>
+      <div class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize"
+          (pageChange)="refreshParcelas()">
+        </ngb-pagination>
 
-              </tbody>
-          </table>
-
-
-
+        <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshParcelas()">
+          <option [ngValue]="5">5 items por página</option>
+          <option [ngValue]="10">10 items por página</option>
+          <option [ngValue]="20">20 items por página</option>
+        </select>
       </div>
+
+
+      <jw-modal id="modal-1">
+        <h1>Pagar parcela número: {{ parcelaSelecionada.numeroParcela | number}}</h1>
+        <hr>
+
+        <form #frm="ngForm">
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="vlParcela" class="control-label required">Valor da Parcela</label>
+            <input type="number" [(ngModel)]="valorPago" name="vlParcela" #vlParcela="ngModel" class="form-control" required
+              id="vlParcela" [class.is-invalid]="vlParcela.invalid && (vlParcela.dirty || vlParcela.touched)"
+              min="0">
+          </div>
+
+
+          <div class="form-group col-md-4">
+            <label for="dataCompra" class="control-label required">Data do Pagamento</label>
+            <div class="input-group">
+              <input
+                  required
+                  class="form-control"
+                  placeholder="dd/mm/yyyy"
+                  name="dataCompra"
+                  id="dataCompra"
+                  [(ngModel)]="dataCompra"
+                  (dateSelect)="onDateSelect($event)"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+              />
+              <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"><i
+                  class="fa-solid fa-calendar-days"></i></button>
+            </div>
+          </div>
+        </div>
+
+        </form>
+
+        <br />
+        <div class="alert alert-danger" role="alert" *ngIf="showError">
+            ERROR: <strong> {{ msgError }} </strong>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary" (click)="atualizarParcela($event)" [disabled]="frm.invalid || showError"> <i
+            class="fa-solid fa-pen"></i> Pagar</button>
+        <button type="button" class="btn btn-danger" (click)="modalService.close();"> <i class="fa-solid fa-trash"></i>
+          Fechar</button>
+      </jw-modal>
+
+
+    </div>
   </div>
 </div>
+
