@@ -10,7 +10,7 @@ import { Parcela } from '../model/parcela-model';
 })
 export class ParcelaService {
 
-  url = environment.BASE_URL + "api/parcela";
+  url = environment.BASE_URL + "api/parcelas";
   private parcelas$!: Observable<Parcela[]>;
 
   constructor(private http: HttpClient) { }

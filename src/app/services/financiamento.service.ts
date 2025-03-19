@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class FinanciamentoService {
-  url = environment.BASE_URL + "api/financiamento";
+  url = environment.BASE_URL + "api/financiamentos";
   private financiamentos$!: Observable<Financiamento[]>;
 
   constructor(private http: HttpClient) { }

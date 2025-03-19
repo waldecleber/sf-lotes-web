@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class LoteamentoService {
   
-  url =  environment.BASE_URL + "api/loteamento";
+  url =  environment.BASE_URL + "api/loteamentos";
   private loteamentos$!: Observable<Loteamento[]>;
 
   constructor(private http: HttpClient) { }
