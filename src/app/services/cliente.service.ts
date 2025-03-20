@@ -8,7 +8,7 @@ import { Cliente } from '../model/cliente-model';
   providedIn: 'root'
 })
 export class ClienteService {
-  url =  environment.BASE_URL + "api/clientes";
+  url =  environment.BASE_URL + "/clientes";
   private clientes$!: Observable<Cliente[]>;
 
   constructor(private http: HttpClient) { }

@@ -41,7 +41,7 @@ export class ClienteFormComponent implements OnInit {
     console.log(this.cliente);
     this.clienteService.salvarCliente(this.cliente).subscribe(resp => {
       this.router.navigate(['/clientes']);
-    });;
+    });
   }
 
   listarEstados() {
