@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "ec2-44-209-30-178.compute-1.amazonaws.com:8080",
+    "target": "http://ec2-44-209-30-178.compute-1.amazonaws.com:8080",
     "secure": false,
     "pathRewrite": {
       "^/api": ""
