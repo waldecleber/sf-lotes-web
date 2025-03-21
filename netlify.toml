@@ -3,10 +3,10 @@
     command = "npm run build:prod"
     publish = "dist/"
 [[redirects]]
-    from = "/api"
-    to = "/index.html"
+    from = "/api/*"
+    to = "http://ec2-44-209-30-178.compute-1.amazonaws.com:8080"
     status = 200
-    headers = {X-From = "Netlify"}
+    headers = { Access-Control-Allow-Origin = "*" }
 [[headers]]
   for = "/*"
   [headers.values]
