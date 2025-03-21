@@ -1,11 +1,11 @@
 [build]
   base = "/"
   command = "npm run build:prod"
-  publish = "dist/"
+  publish = "dist"
 
 [[redirects]]
   from = "/api/*"
-  to = "http://ec2-44-209-30-178.compute-1.amazonaws.com:8080/:splat"
+  to = "/index.html"
   status = 200
   force = true
   headers = { Access-Control-Allow-Origin = "*" }
